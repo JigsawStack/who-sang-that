@@ -93,7 +93,7 @@ def upload_and_url(file_bytes: bytes) -> str:
     return url
 
 def stt_chunks(url: str, by_speaker: bool = True) -> List[Segment]:
-    stt = js.audio.speech_to_text({"url": url, "by_speaker": by_speaker})
+    stt = js.audio.speech_to_text({"url": url, "by_speaker": by_speaker, "language": "auto",})
     segs = []
     if isinstance(stt, dict):
         # prefer diarized segments if present
@@ -111,7 +111,7 @@ def emb_text_vec(text: str) -> np.ndarray:
     return np.array(r["embeddings"][0], dtype="float32")
 
 def emb_audio_fp(url: str) -> Optional[np.ndarray]:
-    r = js.embedding_v2({"type": "audio", "url": url, "speaker_fingerprint": True})
+    r = js.embedding_v2({"type": "audio", "url": url, "speaker_fingerprint": True, })
     fps = r.get("speaker_embeddings")
     if fps:
         return np.array(fps[0], dtype="float32")
@@ -229,5 +229,8 @@ def more_from_artist(body: MoreFromArtistIn):
             continue
         meta = TRACK_FP.get(t_id)
         if not meta: continue
+
+        if sim < 0.6:  # threshold for "same voice"
+            continue
         out.append({"artist": meta.artist, "title": meta.title, "track_id": t_id, "similarity": round(sim,4)})
     return {"results": out}

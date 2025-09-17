@@ -2,22 +2,24 @@ import requests
 
 def upload_songs():
     # Ask for number of files
-    num_files = int(input("How many files do you want to upload? "))
+    # Hardcoded file data
+    file_data = [
+        ("audio_clips/danse.mp3", "indila", "danse"),
+        ("audio_clips/elevated.mp3", "shubh", "elevated"),
+        ("audio_clips/russian_bandana.mp3", "dhanda", "russian bandana"),
+        ("audio_clips/stay_with_me.mp3", "miki", "stay with me - mayonakara")
+    ]
     
     # Prepare lists for form data
     files = []
     artists = []
     titles = []
     
-    # Collect details for each file
-    for i in range(num_files):
-        print(f"\n--- File {i+1} ---")
-        # file_path = input("Enter the file path: ")
-        # artist = input("Enter the artist name: ")
-        # title = input("Enter the song title: ")
-        file_path = "audio_clips/elevated.mp3"
-        artist = "Shubh"
-        title = "Elevated"
+    # Process all hardcoded files
+    for file_path, artist, title in file_data:
+        print(f"\nFile: {file_path}")
+        print(f"Artist: {artist}")
+        print(f"Title: {title}")
         
         # Add file to files list
         files.append(('files', open(file_path, 'rb')))
